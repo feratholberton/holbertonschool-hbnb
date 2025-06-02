@@ -1,6 +1,13 @@
-# HBnB
+# HBnB Documentation
+
+# High-Level Package Diagram
 
 ```mermaid
+---
+config:
+  theme: dark
+  look: classic
+---
 classDiagram
 class Presentation {
   <<layer>>
