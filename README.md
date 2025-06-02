@@ -1,4 +1,4 @@
-## HBnB
+# HBnB
 
 ```mermaid
 classDiagram
@@ -28,3 +28,46 @@ Presentation --> Facade : Uses
 Facade --> BusinessLogic : Delegates
 BusinessLogic --> Persistence : Data Access
 ```
+
+## Presentation Layer
+
+### Interface between users and the system
+
+Contents:
+**Services**: Business-use endpoints (e.g. create user, book place).
+
+**APIs**: HTTP interfaces used by frontend or third-party clients.
+
+
+
+## Business Logic Layer
+
+### The main part of the system - business rules, validations and workflows -
+
+Contents:
+Core domain **models**: User, Place, Review, Amenity
+
+Business operations: e.g. register_user, add_place, etc.
+
+
+
+## Persistence Layer
+
+### Manages how data is stored/retrieved from the database
+
+Contents:
+Repositories / DAOs (Data Access Objects)
+
+SQLAlchemy models, ORM mappings, raw queries, etc.
+
+---
+
+### The Facade Pattern provides a simplified, unified interface to a complex subsystem.
+
+- The Presentation Layer talks only to the Facade.
+- The Facade delegates work to the Business Logic Layer.
+
+Benefits:
+- Reduces coupling between layers.
+- Centralizes business flow.
+- Makes the interface cleaner and more maintainable.
