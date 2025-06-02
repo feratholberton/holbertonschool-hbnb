@@ -1,11 +1,6 @@
 ## HBnB
 
 ```mermaid
----
-config:
-  look: handDrawn
-  theme: neutral
----
 classDiagram
 class Presentation {
   <<layer>>
