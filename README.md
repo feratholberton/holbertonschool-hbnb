@@ -62,8 +62,9 @@ SQLAlchemy models, ORM mappings, raw queries, etc.
 
 ---
 
-### The Facade Pattern provides a simplified, unified interface to a complex subsystem.
+## The Facade Pattern
 
+- The Facade Pattern provides a simplified and unified interface
 - The Presentation Layer talks only to the Facade.
 - The Facade delegates work to the Business Logic Layer.
 
