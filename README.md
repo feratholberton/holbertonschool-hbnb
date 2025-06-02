@@ -5,8 +5,8 @@
 ```mermaid
 ---
 config:
-  theme: base
-  look: classic
+  theme: neo-dark
+  look: neo
 ---
 classDiagram
 class Presentation {
