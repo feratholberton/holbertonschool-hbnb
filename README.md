@@ -5,7 +5,7 @@
 ```mermaid
 ---
 config:
-  theme: dark
+  theme: base
   look: classic
 ---
 classDiagram
