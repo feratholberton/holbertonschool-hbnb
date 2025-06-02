@@ -5,7 +5,7 @@
 ```mermaid
 ---
 config:
-  theme: neo-dark
+  theme: redux-dark
   look: neo
 ---
 classDiagram
