@@ -35,6 +35,7 @@ Presentation --> Facade : Uses
 Facade --> BusinessLogic : Delegates
 BusinessLogic --> Persistence : Data Access
 ```
+[**View diagram online**](https://www.mermaidchart.com/raw/51c92add-4831-4407-9806-ccf8e186814f?theme=light&version=v0.1&format=svg)
 
 ## Presentation Layer
 
