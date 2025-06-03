@@ -159,7 +159,8 @@ User --> Review : Association
 
 ```mermaid
 sequenceDiagram
-box Pink User Registration
+box box Purple Place Creation
+ User Registration
     participant User
     participant API
     participant BusinessLogic
@@ -175,7 +176,7 @@ API-->>User: Return Success/Failure
 
 ```mermaid
 sequenceDiagram
-box Pink Place Creation
+box Purple Place Creation
     participant User
     participant API
     participant BusinessLogic
@@ -191,7 +192,8 @@ API-->>User: Return Success/Failure
 
 ```mermaid
 sequenceDiagram
-box Pink Review Submission
+box box Purple Place Creation
+ Review Submission
     participant User
     participant API
     participant BusinessLogic
@@ -207,7 +209,8 @@ API-->>User: Return Success/Failure
 
 ```mermaid
 sequenceDiagram
-box Pink Fetching a List of Places
+box box Purple Place Creation
+ Fetching a List of Places
     participant User
     participant API
     participant BusinessLogic
