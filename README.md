@@ -80,3 +80,79 @@ Benefits:
 - Reduces coupling between layers.
 - Centralizes business flow.
 - Makes the interface cleaner and more maintainable.
+
+---
+
+# Detailed Class Diagram for Business Logic Layer
+
+```mermaid
+classDiagram
+class BaseModel {
+  <<super class>>
+  +UUID uuid
+  +Date creation_date
+  +Date last_update
+}
+
+class User {
+  <<model>>
+  +String first_name
+  +String last_name
+  +String email
+  +String password
+  +Boolean is_admin
+  +register()
+  +update()
+  +delete()
+}
+
+class Place {
+  <<model>>
+  +User owner
+  +String title
+  +String description
+  +Number price
+  +Number latitude
+  +Number longitude
+  +List (Amenity) amenities
+  +create()
+  +update()
+  +delete()
+}
+
+class Amenity {
+  <<model>>
+  +String name
+  +String description
+  +create()
+  +update()
+  +delete()
+  +list()
+}
+
+class Review {
+  <<model>>
+  +String comment
+  +Number rating
+  +create()
+  +update()
+  +delete()
+  +list()
+}
+
+%% Python method types: 
+%% static method
+%% class method
+%% instance method
+
+BaseModel --|> User : Inheritance
+BaseModel --|> Place : Inheritance
+BaseModel --|> Amenity : Inheritance
+BaseModel --|> Review : Inheritance
+Place o-- User : Composition
+Review o-- Place : Composition
+Amenity o-- Place : Composition
+User --> Review : Association
+
+```
+
