@@ -87,6 +87,7 @@ Benefits:
 
 ```mermaid
 classDiagram
+
 class BaseModel {
   <<super class>>
   +UUID uuid
@@ -100,7 +101,7 @@ class User {
   +String last_name
   +String email
   +String password
-  +Boolean is_admin
+  +Bool is_admin
   +register()
   +update()
   +delete()
@@ -145,14 +146,77 @@ class Review {
 %% class method
 %% instance method
 
-BaseModel --|> User : Inheritance
-BaseModel --|> Place : Inheritance
-BaseModel --|> Amenity : Inheritance
-BaseModel --|> Review : Inheritance
-Place o-- User : Composition
-Review o-- Place : Composition
-Amenity o-- Place : Composition
-User --> Review : Association
+User --|> BaseModel : Inheritance
+Place --|> BaseModel : Inheritance
+Amenity --|> BaseModel  : Inheritance
+Review --|> BaseModel : Inheritance
 
+Place o-- User : Composition
+Place o-- Amenity : Composition
+Review o-- Place : Composition
+User --> Review : Association
 ```
 
+```mermaid
+sequenceDiagram
+box Pink User Registration
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+end
+User->>API: API Call (e.g., Register User)
+API->>BusinessLogic: Validate and Process Request
+BusinessLogic->>Database: Save Data
+Database-->>BusinessLogic: Confirm Save
+BusinessLogic-->>API: Return Response
+API-->>User: Return Success/Failure
+```
+
+```mermaid
+sequenceDiagram
+box Pink Place Creation
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+end
+User->>API: API Call (e.g., Register User)
+API->>BusinessLogic: Validate and Process Request
+BusinessLogic->>Database: Save Data
+Database-->>BusinessLogic: Confirm Save
+BusinessLogic-->>API: Return Response
+API-->>User: Return Success/Failure
+```
+
+```mermaid
+sequenceDiagram
+box Pink Review Submission
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+end
+User->>API: API Call (e.g., Register User)
+API->>BusinessLogic: Validate and Process Request
+BusinessLogic->>Database: Save Data
+Database-->>BusinessLogic: Confirm Save
+BusinessLogic-->>API: Return Response
+API-->>User: Return Success/Failure
+```
+
+```mermaid
+sequenceDiagram
+box Pink Fetching a List of Places
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
+end
+User->>API: API Call (e.g., Register User)
+API->>BusinessLogic: Validate and Process Request
+BusinessLogic->>Database: Save Data
+Database-->>BusinessLogic: Confirm Save
+BusinessLogic-->>API: Return Response
+API-->>User: Return Success/Failure
+```
