@@ -157,10 +157,11 @@ Review o-- Place : Composition
 User --> Review : Association
 ```
 
+---
+
 ```mermaid
 sequenceDiagram
-box box Purple Place Creation
- User Registration
+box Purple User Registration
     participant User
     participant API
     participant BusinessLogic
@@ -173,6 +174,8 @@ Database-->>BusinessLogic: Confirm Save
 BusinessLogic-->>API: Return Response
 API-->>User: Return Success/Failure
 ```
+
+---
 
 ```mermaid
 sequenceDiagram
@@ -190,10 +193,11 @@ BusinessLogic-->>API: Return Response
 API-->>User: Return Success/Failure
 ```
 
+---
+
 ```mermaid
 sequenceDiagram
-box box Purple Place Creation
- Review Submission
+box Purple Review Submission
     participant User
     participant API
     participant BusinessLogic
@@ -207,10 +211,11 @@ BusinessLogic-->>API: Return Response
 API-->>User: Return Success/Failure
 ```
 
+---
+
 ```mermaid
 sequenceDiagram
-box box Purple Place Creation
- Fetching a List of Places
+box Purple Fetching a List of Places
     participant User
     participant API
     participant BusinessLogic
