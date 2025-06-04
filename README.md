@@ -10,46 +10,39 @@ config:
 ---
 classDiagram
 class Presentation {
-  <<layer>>
-  +Services
-  +API
+    <<layer>>
+    +Services
+    +API
 }
-namespace BusinessLayer {
-  class Facade {
-    <<pattern>>
-    +callBusinessLogic()
-  }
-  class BusinessLogic {
+
+class Business {
     <<layer>>
     +User
     +Place
     +Review
     +Amenity
-  }
 }
+
 class Persistence {
-  <<layer>>
-  +DataAccess
+    <<layer>>
+    +DataAccess
 }
-Presentation --> Facade : Uses
-Facade --> BusinessLogic : Delegates
-BusinessLogic --> Persistence : Data Access
+
+Presentation --> Business : Facade
+Business --> Persistence : Data Access
 ```
 [**Better View @ mermaidchart.com**](https://www.mermaidchart.com/raw/51c92add-4831-4407-9806-ccf8e186814f?theme=light&version=v0.1&format=svg)
 
 ## Presentation Layer
-
 ### Interface between users and the system
 
 Contents:
 **Services**: Business-use endpoints (e.g. create user, book place).
-
 **APIs**: HTTP interfaces used by frontend or third-party clients.
 
 
 
 ## Business Logic Layer
-
 ### The main part of the system - business rules, validations and workflows -
 
 Contents:
@@ -60,7 +53,6 @@ Business operations: e.g. register_user, add_place, etc.
 
 
 ## Persistence Layer
-
 ### Manages how data is stored/retrieved from the database
 
 Contents:
@@ -72,7 +64,7 @@ SQLAlchemy models, ORM mappings, raw queries, etc.
 
 ## The Facade Pattern
 
-- The Facade Pattern provides a simplified and unified interface
+- The Facade Pattern provides a simplified and unified interface (While we work in tasks 0, 1 and 3, the API will be our interface)
 - The Presentation Layer talks only to the Facade.
 - The Facade delegates work to the Business Logic Layer.
 
@@ -119,6 +111,7 @@ class Place {
   +create()
   +update()
   +delete()
+  +list()
 }
 
 class Amenity {
@@ -153,7 +146,8 @@ Review --|> BaseModel : Inheritance
 
 Place o-- User : Composition
 Place o-- Amenity : Composition
-Review o-- Place : Composition
+Place o-- Review : Composition
+
 User --> Review : Association
 ```
 
