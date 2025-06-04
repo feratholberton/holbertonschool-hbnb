@@ -153,6 +153,8 @@ User --> Review : Association
 
 ---
 
+## User Registration sequence
+
 ```mermaid
 sequenceDiagram
 box Purple User Registration
@@ -170,6 +172,8 @@ API-->>User: Return Success/Failure
 ```
 
 ---
+
+## Place Creation sequence
 
 ```mermaid
 sequenceDiagram
@@ -189,6 +193,8 @@ API-->>User: Return Success/Failure
 
 ---
 
+## Review Submission sequence
+
 ```mermaid
 sequenceDiagram
 box Purple Review Submission
@@ -206,6 +212,8 @@ API-->>User: Return Success/Failure
 ```
 
 ---
+
+## Fetching a List of Places sequence
 
 ```mermaid
 sequenceDiagram
