@@ -176,19 +176,21 @@ API-->>User: Return Success/Failure
 ## Place Creation sequence
 
 ```mermaid
+---
+config:
+  theme: neo
+---
 sequenceDiagram
-box Purple Place Creation
-    participant User
-    participant API
-    participant BusinessLogic
-    participant Database
-end
-User->>API: API Call (e.g., Register User)
-API->>BusinessLogic: Validate and Process Request
-BusinessLogic->>Database: Save Data
-Database-->>BusinessLogic: Confirm Save
-BusinessLogic-->>API: Return Response
-API-->>User: Return Success/Failure
+  participant User as User
+  participant API as API
+  participant Facade as Facade
+  participant BusinessLogic as BusinessLogic
+  User ->> API: Sending data
+  API -->> User: Error when checking data
+  API ->> Facade: Method call
+  Facade ->> BusinessLogic: Validates and processes data
+  Note right of BusinessLogic: Stores in memory
+  BusinessLogic -->> User: Success message
 ```
 
 ---
