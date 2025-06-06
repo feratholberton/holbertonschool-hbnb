@@ -201,18 +201,19 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-box Purple Review Submission
-    participant User
-    participant API
-    participant BusinessLogic
-    participant Database
-end
-User->>API: API Call (e.g., Register User)
-API->>BusinessLogic: Validate and Process Request
-BusinessLogic->>Database: Save Data
-Database-->>BusinessLogic: Confirm Save
-BusinessLogic-->>API: Return Response
-API-->>User: Return Success/Failure
+participant User
+participant API
+participant BusinessLogic
+participant Database
+
+User->>API: Envia la reseña
+API->>BusinessLogic: Valida la reseña
+BusinessLogic -->> API: Reseña invalida codigo 404
+API -->> User: Mensaje de error 
+BusinessLogic ->> Database: Guarda la reseña
+Database-->>BusinessLogic: Se guardo correctamente 
+BusinessLogic-->>API: Quedo creada con exito, codigo 201 
+API-->>User: Mensaje de exito 
 ```
 
 ---
