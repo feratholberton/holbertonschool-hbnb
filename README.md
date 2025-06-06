@@ -176,21 +176,23 @@ API-->>User: Return Success/Failure
 ## Place Creation sequence
 
 ```mermaid
----
-config:
-  theme: neo
----
 sequenceDiagram
   participant User as User
   participant API as API
-  participant Facade as Facade
   participant BusinessLogic as BusinessLogic
-  User ->> API: Sending data
-  API -->> User: Error when checking data
-  API ->> Facade: Method call
-  Facade ->> BusinessLogic: Validates and processes data
-  Note right of BusinessLogic: Stores in memory
-  BusinessLogic -->> User: Success message
+  participant DataBase as DataBase
+  User ->> API: Creacion de lugar
+  API -->> User: Mensaje Error de Datos 
+  API ->> BusinessLogic: Valida y Procesa los datos del lugar
+  BusinessLogic -->> API: Datos incorrectos
+  BusinessLogic ->> DataBase: Valida que no exista y Guarda
+  DataBase -->> BusinessLogic: Se guardo exitosamente
+  BusinessLogic -->> API: Se guardo correctamente
+  API -->> User: Mensaje de exito, codigo 201
+  DataBase -->> BusinessLogic: Error, ya existe ese lugar
+  BusinessLogic -->> API: El lugar ya existe
+  API -->> User: Mensaje de error, codigo 404
+
 ```
 
 ---
