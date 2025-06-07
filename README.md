@@ -222,16 +222,20 @@ API-->>User: Mensaje de exito
 
 ```mermaid
 sequenceDiagram
-box Purple Fetching a List of Places
-    participant User
-    participant API
-    participant BusinessLogic
-    participant Database
-end
-User->>API: API Call (e.g., Register User)
-API->>BusinessLogic: Validate and Process Request
-BusinessLogic->>Database: Save Data
-Database-->>BusinessLogic: Confirm Save
-BusinessLogic-->>API: Return Response
-API-->>User: Return Success/Failure
+  participant User as User
+  participant API as API
+  participant BusinessLogic as BusinessLogic
+  participant Database as Database
+
+  User ->> API: El usuario pide una lista de lugares 
+  API ->> BusinessLogic: Analiza y valida los parametros
+  BusinessLogic -->> API: Analisis y validacion incorrecto
+  API -->> User: Mensaje de error
+  BusinessLogic ->> Database: Consulta si existen los lugares
+  Database -->> BusinessLogic: Existen
+  BusinessLogic -->> API: Existen correctamente
+  API -->> User: Mensaje de exito
+  Database -->> BusinessLogic: No existen
+  BusinessLogic -->> API: No encontrado
+  API -->> User: Mensaje de No encontrado
 ```
