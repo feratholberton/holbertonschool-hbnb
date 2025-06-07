@@ -3,11 +3,6 @@
 # High-Level Package Diagram
 
 ```mermaid
----
-config:
-  theme: redux-dark
-  look: neo
----
 classDiagram
 class Presentation {
     <<layer>>
@@ -31,18 +26,17 @@ class Persistence {
 Presentation --> Business : Facade
 Business --> Persistence : Data Access
 ```
-[**Better View @ mermaidchart.com**](https://www.mermaidchart.com/raw/51c92add-4831-4407-9806-ccf8e186814f?theme=light&version=v0.1&format=svg)
 
 ## Presentation Layer
+
 ### Interface between users and the system
 
 Contents:
 **Services**: Business-use endpoints (e.g. create user, book place).
 **APIs**: HTTP interfaces used by frontend or third-party clients.
 
-
-
 ## Business Logic Layer
+
 ### The main part of the system - business rules, validations and workflows -
 
 Contents:
@@ -50,9 +44,8 @@ Core domain **models**: User, Place, Review, Amenity
 
 Business operations: e.g. register_user, add_place, etc.
 
-
-
 ## Persistence Layer
+
 ### Manages how data is stored/retrieved from the database
 
 Contents:
@@ -134,11 +127,6 @@ class Review {
   +list()
 }
 
-%% Python method types: 
-%% static method
-%% class method
-%% instance method
-
 User --|> BaseModel : Inheritance
 Place --|> BaseModel : Inheritance
 Amenity --|> BaseModel  : Inheritance
@@ -153,22 +141,33 @@ User --> Review : Association
 
 ---
 
+# Sequence Diagrams for API Calls
+
 ## User Registration sequence
 
 ```mermaid
 sequenceDiagram
-box Purple User Registration
-    participant User
-    participant API
-    participant BusinessLogic
-    participant Database
-end
-User->>API: API Call (e.g., Register User)
-API->>BusinessLogic: Validate and Process Request
-BusinessLogic->>Database: Save Data
-Database-->>BusinessLogic: Confirm Save
-BusinessLogic-->>API: Return Response
-API-->>User: Return Success/Failure
+participant User
+participant API
+participant BusinessLogic
+participant Database
+
+User ->> API : Register User (API Call)
+API ->> BusinessLogic : Validate and Process Request
+BusinessLogic -->> BusinessLogic : Validation Failed
+BusinessLogic -->> API : Return Error
+API -->> User : Registration Failed Message
+
+BusinessLogic ->> Database : Check User Existense
+Database -->> Database : User Already Exist
+Database -->> BusinessLogic : Return Error
+BusinessLogic -->> API : Return Error
+API -->> User : Registration Failed Message
+
+BusinessLogic ->> Database : Save Data
+Database -->> BusinessLogic : Confirm Save
+BusinessLogic -->> API : Return Success
+API -->> User : Registration Successfully Message
 ```
 
 ---
