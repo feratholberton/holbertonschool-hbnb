@@ -73,70 +73,70 @@ Benefits:
 ```mermaid
 classDiagram
 
-class BaseModel {
-  <<super class>>
-  +UUID uuid
-  +Date creation_date
-  +Date last_update
-}
+    class BaseModel {
+    <<super class>>
+    +UUID uuid
+    +Date creation_date
+    +Date last_update
+    }
 
-class User {
-  <<model>>
-  +String first_name
-  +String last_name
-  +String email
-  +String password
-  +Bool is_admin
-  +register()
-  +update()
-  +delete()
-}
+    class User {
+    <<model>>
+    +String first_name
+    +String last_name
+    +String email
+    +String password
+    +Bool is_admin
+    +register()
+    +update()
+    +delete()
+    }
 
-class Place {
-  <<model>>
-  +User owner
-  +String title
-  +String description
-  +Number price
-  +Number latitude
-  +Number longitude
-  +List (Amenity) amenities
-  +create()
-  +update()
-  +delete()
-  +list()
-}
+    class Place {
+    <<model>>
+    +User owner
+    +String title
+    +String description
+    +Number price
+    +Number latitude
+    +Number longitude
+    +List (Amenity) amenities
+    +create()
+    +update()
+    +delete()
+    +list()
+    }
 
-class Amenity {
-  <<model>>
-  +String name
-  +String description
-  +create()
-  +update()
-  +delete()
-  +list()
-}
+    class Amenity {
+    <<model>>
+    +String name
+    +String description
+    +create()
+    +update()
+    +delete()
+    +list()
+    }
 
-class Review {
-  <<model>>
-  +String comment
-  +Number rating
-  +create()
-  +update()
-  +delete()
-  +list()
-}
+    class Review {
+    <<model>>
+    +String comment
+    +Number rating
+    +create()
+    +update()
+    +delete()
+    +list()
+    }
 
-User --|> BaseModel : Inheritance
-Place --|> BaseModel : Inheritance
-Amenity --|> BaseModel  : Inheritance
-Review --|> BaseModel : Inheritance
+    User --|> BaseModel : Inheritance
+    Place --|> BaseModel : Inheritance
+    Amenity --|> BaseModel  : Inheritance
+    Review --|> BaseModel : Inheritance
 
-Place o-- User : Composition
-Place o-- Amenity : Composition
-Place o-- Review : Composition
+    Place o-- User : Composition
+    Place o-- Amenity : Composition
+    Place o-- Review : Composition
 
-User --> Review : Association
+    User --> Review : Association
 ```
 
 ---
@@ -147,27 +147,30 @@ User --> Review : Association
 
 ```mermaid
 sequenceDiagram
-participant User
-participant API
-participant BusinessLogic
-participant Database
+    participant User
+    participant API
+    participant BusinessLogic
+    participant Database
 
-User ->> API : Register User (API Call)
-API ->> BusinessLogic : Validate and Process Request
-BusinessLogic -->> BusinessLogic : Validation Failed
-BusinessLogic -->> API : Return Error
-API -->> User : Registration Failed Message
+    User ->> API : Register User (API Call)
+    API -->> API : Wrong Data
+    API -->> User : Wrong Data Error Message
 
-BusinessLogic ->> Database : Check User Existense
-Database -->> Database : User Already Exist
-Database -->> BusinessLogic : Return Error
-BusinessLogic -->> API : Return Error
-API -->> User : Registration Failed Message
+    API ->> BusinessLogic : Validate and Process Request
+    BusinessLogic -->> BusinessLogic : Validation Failed
+    BusinessLogic -->> API : Return Error
+    API -->> User : Registration Failed Message
 
-BusinessLogic ->> Database : Create User
-Database -->> BusinessLogic : Return Success
-BusinessLogic -->> API : Return Success
-API -->> User : Registration Successfully Message
+    BusinessLogic ->> Database : Check User Existense
+    Database -->> Database : User Already Exist
+    Database -->> BusinessLogic : Return Error
+    BusinessLogic -->> API : Return Error
+    API -->> User : Registration Failed Message
+
+    BusinessLogic ->> Database : Create User
+    Database -->> BusinessLogic : Return Success
+    BusinessLogic -->> API : Return Success
+    API -->> User : Registration Successfully Message
 ```
 
 ---
@@ -181,26 +184,25 @@ sequenceDiagram
   participant BusinessLogic
   participant DataBase
   
-  User ->> API : Place Creation (API Call)
-  API -->> API : Wrong Data
-  API -->> User : Wrong Data Error Message
-  
-  API ->> BusinessLogic : Validate and Process Request
-  BusinessLogic -->> BusinessLogic : Validation Failed
-  BusinessLogic -->> API : Return Error
-  API -->> User : Place Creation Failed Error Message
+    User ->> API : Place Creation (API Call)
+    API -->> API : Wrong Data
+    API -->> User : Wrong Data Error Message
 
-  BusinessLogic ->> DataBase : Check Place Existense
-  DataBase -->> DataBase : Place Already Exist
-  DataBase -->> BusinessLogic: Return Error
-  BusinessLogic -->> API : Return Error
-  API -->> User : Place Creation Failed Error Message
-  
-  BusinessLogic ->> DataBase : Create Place
-  DataBase -->> BusinessLogic : Place Creation Succesfull
-  BusinessLogic -->> API : Return Success
-  API -->> User : Successfully Place Creation Message
+    API ->> BusinessLogic : Validate and Process Request
+    BusinessLogic -->> BusinessLogic : Validation Failed
+    BusinessLogic -->> API : Return Error
+    API -->> User : Place Creation Failed Error Message
 
+    BusinessLogic ->> DataBase : Check Place Existense
+    DataBase -->> DataBase : Place Already Exist
+    DataBase -->> BusinessLogic: Return Error
+    BusinessLogic -->> API : Return Error
+    API -->> User : Place Creation Failed Error Message
+
+    BusinessLogic ->> DataBase : Create Place
+    DataBase -->> BusinessLogic : Place Creation Succesfull
+    BusinessLogic -->> API : Return Success
+    API -->> User : Successfully Place Creation Message
 ```
 
 ---
@@ -209,24 +211,24 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-participant User
-participant API
-participant BusinessLogic
-participant DataBase
+    participant User
+    participant API
+    participant BusinessLogic
+    participant DataBase
 
-User ->> API : Review Submission (API Call)
-API -->> API : Wrong Data
-API -->> User : Wrong Data Error Message
+    User ->> API : Review Submission (API Call)
+    API -->> API : Wrong Data
+    API -->> User : Wrong Data Error Message
 
-API ->> BusinessLogic : Validate and Process Request
-BusinessLogic -->> BusinessLogic : Validation Failed
-BusinessLogic -->> API : Return Error
-API -->> User : Review Submission Failed Error Message
+    API ->> BusinessLogic : Validate and Process Request
+    BusinessLogic -->> BusinessLogic : Validation Failed
+    BusinessLogic -->> API : Return Error
+    API -->> User : Review Submission Failed Error Message
 
-BusinessLogic ->> DataBase : Create Review
-DataBase -->> BusinessLogic : Review Creation Succesfull
-BusinessLogic -->> API : Return Success
-API -->> User : Successfully Review Submission Message
+    BusinessLogic ->> DataBase : Create Review
+    DataBase -->> BusinessLogic : Review Creation Succesfull
+    BusinessLogic -->> API : Return Success
+    API -->> User : Successfully Review Submission Message
 ```
 
 ---
@@ -235,20 +237,28 @@ API -->> User : Successfully Review Submission Message
 
 ```mermaid
 sequenceDiagram
-  participant User as User
-  participant API as API
-  participant BusinessLogic as BusinessLogic
-  participant Database as Database
+    participant User
+    participant API
+    participant BusinessLogic
+    participant DataBase
 
-  User ->> API: El usuario pide una lista de lugares 
-  API ->> BusinessLogic: Analiza y valida los parametros
-  BusinessLogic -->> API: Analisis y validacion incorrecto
-  API -->> User: Mensaje de error
-  BusinessLogic ->> Database: Consulta si existen los lugares
-  Database -->> BusinessLogic: Existen
-  BusinessLogic -->> API: Existen correctamente
-  API -->> User: Mensaje de exito
-  Database -->> BusinessLogic: No existen
-  BusinessLogic -->> API: No encontrado
-  API -->> User: Mensaje de No encontrado
+    User ->> API : Fetching a List of Places (API Call)
+    API -->> API : Wrong Data
+    API -->> User : Wrong Data Error Message
+
+    API ->> BusinessLogic : Validate and Process Request
+    BusinessLogic -->> BusinessLogic : Validation Failed
+    BusinessLogic -->> API : Return Error
+    API -->> User : Fetching a List of Places <br> Failed Error Message
+
+    BusinessLogic ->> DataBase : Check Places List Existense
+    DataBase -->> DataBase : Places List Not Available
+    DataBase -->> BusinessLogic: Return Error
+    BusinessLogic -->> API : Return Error
+    API -->> User : No Places To Show Message
+
+    BusinessLogic ->> DataBase : Get Places List
+    DataBase -->> BusinessLogic : Return Places List
+    BusinessLogic -->> API : Return Success
+    API -->> User : Show Places List
 ```
