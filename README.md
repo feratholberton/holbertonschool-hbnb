@@ -181,9 +181,9 @@ sequenceDiagram
   participant BusinessLogic
   participant DataBase
   
-  User ->> API: Place Creation (API Call)
-  API -->> API: Wrong Data
-  API -->> User: Wrong Data Error Message
+  User ->> API : Place Creation (API Call)
+  API -->> API : Wrong Data
+  API -->> User : Wrong Data Error Message
   
   API ->> BusinessLogic : Validate and Process Request
   BusinessLogic -->> BusinessLogic : Validation Failed
@@ -193,13 +193,13 @@ sequenceDiagram
   BusinessLogic ->> DataBase : Check Place Existense
   DataBase -->> DataBase : Place Already Exist
   DataBase -->> BusinessLogic: Return Error
-  BusinessLogic -->> API: Return Error
-  API -->> User: Place Creation Failed Error Message
+  BusinessLogic -->> API : Return Error
+  API -->> User : Place Creation Failed Error Message
   
   BusinessLogic ->> DataBase : Create Place
-  DataBase -->> BusinessLogic: Place Creation Succesfull
-  BusinessLogic -->> API: Return Success
-  API -->> User: Successfully Place Creation Message
+  DataBase -->> BusinessLogic : Place Creation Succesfull
+  BusinessLogic -->> API : Return Success
+  API -->> User : Successfully Place Creation Message
 
 ```
 
@@ -212,16 +212,21 @@ sequenceDiagram
 participant User
 participant API
 participant BusinessLogic
-participant Database
+participant DataBase
 
-User->>API: Envia la reseña
-API->>BusinessLogic: Valida la reseña
-BusinessLogic -->> API: Reseña invalida codigo 404
-API -->> User: Mensaje de error 
-BusinessLogic ->> Database: Guarda la reseña
-Database-->>BusinessLogic: Se guardo correctamente 
-BusinessLogic-->>API: Quedo creada con exito, codigo 201 
-API-->>User: Mensaje de exito 
+User ->> API : Review Submission (API Call)
+API -->> API : Wrong Data
+API -->> User : Wrong Data Error Message
+
+API ->> BusinessLogic : Validate and Process Request
+BusinessLogic -->> BusinessLogic : Validation Failed
+BusinessLogic -->> API : Return Error
+API -->> User : Review Submission Failed Error Message
+
+BusinessLogic ->> DataBase : Create Review
+DataBase -->> BusinessLogic : Review Creation Succesfull
+BusinessLogic -->> API : Return Success
+API -->> User : Successfully Review Submission Message
 ```
 
 ---
