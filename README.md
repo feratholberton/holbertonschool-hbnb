@@ -164,8 +164,8 @@ Database -->> BusinessLogic : Return Error
 BusinessLogic -->> API : Return Error
 API -->> User : Registration Failed Message
 
-BusinessLogic ->> Database : Save Data
-Database -->> BusinessLogic : Confirm Save
+BusinessLogic ->> Database : Create User
+Database -->> BusinessLogic : Return Success
 BusinessLogic -->> API : Return Success
 API -->> User : Registration Successfully Message
 ```
@@ -176,21 +176,30 @@ API -->> User : Registration Successfully Message
 
 ```mermaid
 sequenceDiagram
-  participant User as User
-  participant API as API
-  participant BusinessLogic as BusinessLogic
-  participant DataBase as DataBase
-  User ->> API: Creacion de lugar
-  API -->> User: Mensaje Error de Datos 
-  API ->> BusinessLogic: Valida y Procesa los datos del lugar
-  BusinessLogic -->> API: Datos incorrectos
-  BusinessLogic ->> DataBase: Valida que no exista y Guarda
-  DataBase -->> BusinessLogic: Se guardo exitosamente
-  BusinessLogic -->> API: Se guardo correctamente
-  API -->> User: Mensaje de exito, codigo 201
-  DataBase -->> BusinessLogic: Error, ya existe ese lugar
-  BusinessLogic -->> API: El lugar ya existe
-  API -->> User: Mensaje de error, codigo 404
+  participant User
+  participant API
+  participant BusinessLogic
+  participant DataBase
+  
+  User ->> API: Place Creation (API Call)
+  API -->> API: Wrong Data
+  API -->> User: Wrong Data Error Message
+  
+  API ->> BusinessLogic : Validate and Process Request
+  BusinessLogic -->> BusinessLogic : Validation Failed
+  BusinessLogic -->> API : Return Error
+  API -->> User : Place Creation Failed Error Message
+
+  BusinessLogic ->> DataBase : Check Place Existense
+  DataBase -->> DataBase : Place Already Exist
+  DataBase -->> BusinessLogic: Return Error
+  BusinessLogic -->> API: Return Error
+  API -->> User: Place Creation Failed Error Message
+  
+  BusinessLogic ->> DataBase : Create Place
+  DataBase -->> BusinessLogic: Place Creation Succesfull
+  BusinessLogic -->> API: Return Success
+  API -->> User: Successfully Place Creation Message
 
 ```
 
