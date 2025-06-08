@@ -295,7 +295,7 @@ sequenceDiagram
 ```
 
 ---
-# API Interaction Flow – Place Creation
+
 ## Overview
 This sequence diagram represents the interaction flow when a user attempts to create a new place through the HBnB project API. It shows how different components—User, API, Business Logic, and Database—communicate, explaining how the request is validated, processed, and either saved or rejected based on different scenarios.
 
@@ -354,7 +354,7 @@ sequenceDiagram
 
 ---
 
-# API Interaction Flow – Review Submission
+
 ## Overview
 This sequence diagram represents the process that takes place when a user submits a review through the HBnB system. It details how the data is transmitted from the user to the API, then validated, and finally stored if it meets the necessary requirements.
 
@@ -416,7 +416,7 @@ sequenceDiagram
     API -->> User : Show Places List
 ```
 
-# API Interaction Flow – Fetching a List of Places
+
 ## Overview
 This sequence diagram describes the process that takes place when a user requests a list of available places in the HBnB system. It details how the request is validated, how the database is queried, and what responses are generated based on the outcome of that search.
 
