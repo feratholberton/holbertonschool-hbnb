@@ -227,7 +227,7 @@ sequenceDiagram
 ```
 
 ---
-# User Registration Flow
+
 ## Overview
 This sequence diagram describes the steps the system follows when a person attempts to register on the platform. It details how errors are handled and the conditions that must be met for registration to be successful.
 
