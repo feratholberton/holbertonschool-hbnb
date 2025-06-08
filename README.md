@@ -151,7 +151,7 @@ classDiagram
 Entities & Relationships
 The Business Logic Layer contains the core elements of the application, modeling real-world concepts such as users, places, reviews, and amenities. These entities work together to define the system’s main operations.
 
-User
+## User
 
 Represents a person who interacts with the system.
 
@@ -159,7 +159,7 @@ Has attributes like id, name, and email.
 
 Can create reviews and be associated with places.
 
-Place
+## Place
 
 Represents a location within the system.
 
@@ -167,7 +167,7 @@ Includes attributes such as id, name, address, and type.
 
 Is connected to Reviews, which users create.
 
-Review
+## Review
 
 Stores a user's opinion about a place.
 
@@ -175,7 +175,7 @@ Includes details like rating, comment, and date.
 
 Is linked to both the User (author of the review) and the Place (place being reviewed).
 
-Amenity
+## Amenity
 
 Represents features or services associated with a place.
 
@@ -183,7 +183,7 @@ Examples include Wi-Fi, Parking, or Accessibility.
 
 Places can have multiple amenities, allowing flexible data management.
 
-How These Fit Into Business Logic
+## How These Fit Into Business Logic
 The Business Logic Layer processes requests and applies system rules. Instead of interacting directly with the database, the entities communicate through well-defined methods and relationships:
 
 User interactions → Users can create, edit, or delete reviews of places.
@@ -192,7 +192,7 @@ Place management → Places are created, categorized, and associated with amenit
 
 Data validation and retrieval → Before saving a review, business rules such as rating and comment validity are verified.
 
-Facade Pattern
+## Facade Pattern
 The facade pattern in the business logic layer acts as an intermediary between the presentation layer and business logic. Instead of the presentation layer interacting directly with multiple business components, the facade provides a single point of access. This reduces layer dependencies and simplifies integration.
 # Sequence Diagrams for API Calls
 
