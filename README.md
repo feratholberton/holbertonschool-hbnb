@@ -1,4 +1,5 @@
 # HBnB Documentation
+<<<<<<< HEAD
 
 # Introduction to HBnB
 This document was created to help understand and implement the HBnB project, a simplified version of AirBnB developed as part of a learning process. Its goal is to clearly explain how the system works, what components it consists of, and how to get it up and running step by step.
@@ -7,6 +8,18 @@ HBnB allows the management of data such as users, places to stay, reviews, and m
 
 The idea is that this guide serves as support both for those working directly on the project and for those who need to understand or maintain it in the future.
 
+=======
+A
+B
+C
+C
+D
+D
+C
+C
+C
+|Z<1234567890'+´{}.
+>>>>>>> a1c1595 (creando directorios y archivos)
 # High-Level Package Diagram
 
 ```mermaid
