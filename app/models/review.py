@@ -23,3 +23,6 @@ class Review(BaseModel):
         self.rating = rating
         self.place = place
         self.user = user
+        
+        place.reviews.append(self)
+        self.amenities = []
