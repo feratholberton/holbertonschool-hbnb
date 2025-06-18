@@ -45,7 +45,7 @@ git clone https://github.com/feratholberton/holbertonschool-hbnb.git
 Go to part2 dir
 ```bash
 python -m venv venv
-. .venv/bin/activate  # On Windows use `venv\Scripts\activate`
+. .venv/bin/activate
 ```
 
 3. Install Dependencies
