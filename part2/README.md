@@ -38,7 +38,7 @@ hbnb/
 
 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/hbnb.git
+git clone https://github.com/feratholberton/holbertonschool-hbnb.git
 ```
 
 2. Create a Virtual Environment and activate it
