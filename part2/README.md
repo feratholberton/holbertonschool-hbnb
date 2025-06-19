@@ -44,7 +44,7 @@ git clone https://github.com/feratholberton/holbertonschool-hbnb.git
 2. Create a Virtual Environment and activate it
 Go to part2 dir
 ```bash
-python -m venv venv
+python -m venv .venv
 . .venv/bin/activate
 ```
 
