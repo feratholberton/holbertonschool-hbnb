@@ -1,7 +1,5 @@
-#!/usr/bin/python3
 import re
 from Base_Model import BaseModel
-
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, is_admin=False):
@@ -21,4 +19,3 @@ class User(BaseModel):
         self.is_admin = is_admin
         
         self.places = []
-

@@ -1,6 +1,4 @@
-#!/usr/bin/python3
 from Base_Model import BaseModel
-
 
 class Amenity(BaseModel):
     def __init__(self, name):
