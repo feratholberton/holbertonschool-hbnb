@@ -25,4 +25,4 @@ class Review(BaseModel):
         self.user = user
         
         place.reviews.append(self)
-        self.amenities = []
+        #self.amenities = []
