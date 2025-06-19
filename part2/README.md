@@ -44,7 +44,7 @@ git clone https://github.com/feratholberton/holbertonschool-hbnb.git
 2. Create a Virtual Environment and activate it
 Go to part2 dir
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 . .venv/bin/activate
 ```
 
@@ -55,5 +55,10 @@ pip install -r requirements.txt
 
 4. Run the Application
 ```bash
-python run.py
+python3 run.py
+```
+
+5. Local URL
+```bash
+http://localhost:5000/api/v1/
 ```
