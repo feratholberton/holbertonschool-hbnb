@@ -20,7 +20,7 @@ class Place(BaseModel):
         if not isinstance(owner, User):
             raise ValueError("Owner must be a User")
         
-        self.id = id
+        #self.id = id
         self.title = title
         self.description = description
         self.price = price
