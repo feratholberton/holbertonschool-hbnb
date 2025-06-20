@@ -1,3 +1,6 @@
+from app.persistence.repository import InMemoryRepository
+from app.models.user import User
+
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -15,7 +18,7 @@ class HBnBFacade:
 
     def create_amenity(self, amenity_data):
     # Placeholder for logic to create an amenity
-    pass
+        pass
 
     def get_amenity(self, amenity_id):
     # Placeholder for logic to retrieve an amenity by ID
