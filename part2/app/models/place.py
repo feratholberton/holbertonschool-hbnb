@@ -8,7 +8,7 @@ class Place(BaseModel):
             raise ValueError("The title of the place. Required, maximum length of 100 characters.")
 
         if price < 0:
-                raise ValueError("Must be a positive value.")
+            raise ValueError("Must be a positive value.")
 
         if not (-90 <= latitude <= 90):
             raise ValueError("Latitude coordinate for the place location. Must be within the range of -90.0 to 90.0.")
