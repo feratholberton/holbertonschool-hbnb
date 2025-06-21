@@ -1,5 +1,5 @@
-from Base_Model import BaseModel
-from user import User
+from app.models.Base_Model import BaseModel
+from app.models.user import User
 
 class Place(BaseModel):
     def __init__(self, title, price, latitude, longitude, owner, description=""):

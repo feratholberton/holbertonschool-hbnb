@@ -1,6 +1,7 @@
 import re
 from app.models.Base_Model import BaseModel
 
+
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, is_admin=False):
         super().__init__()

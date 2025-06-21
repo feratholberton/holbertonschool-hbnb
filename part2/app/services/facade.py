@@ -1,12 +1,15 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
+from app.models.amenity import Amenity
+from app.models.place import Place
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
+        self.amenity_repo = InMemoryRepository()
+        self.place_repo = InMemoryRepository()
     
     # User Methods -----------------------------------------------------------
-    
     def create_user(self, user_data):
         user = User(**user_data)
         self.user_repo.add(user)
@@ -29,24 +32,74 @@ class HBnBFacade:
         return user
 
 
+
     # Amenities Methods -------------------------------------------------------
-    
     def create_amenity(self, amenity_data):
-    # Placeholder for logic to create an amenity
-        pass
+        amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(amenity)
+        return amenity
 
     def get_amenity(self, amenity_id):
-    # Placeholder for logic to retrieve an amenity by ID
-        pass
+        return self.amenity_repo.get(amenity_id)
 
     def get_all_amenities(self):
-    # Placeholder for logic to retrieve all amenities
-        pass
+        return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-    # Placeholder for logic to update an amenity
-        pass
-    
+        amenity = self.get_amenity(amenity_id)
+        if not amenity:
+            return None
+        amenity.update(amenity_data)
+        return amenity
+
+
+
+    # Place Methods -------------------------------------------------------
+    def create_place(self, place_data):
+        owner = self.user_repo.get(place_data['owner_id'])
+        if not owner:
+            raise ValueError("Owner not found")
+
+        # Convert amenity IDs to Amenity instances
+        amenity_objs = []
+        for amenity_id in place_data.get('amenities', []):
+            amenity = self.amenity_repo.get(amenity_id)
+            if not amenity:
+                raise ValueError(f"Amenity with ID {amenity_id} not found")
+            amenity_objs.append(amenity)
+
+        place = Place(
+            title=place_data['title'],
+            description=place_data.get('description', ''),
+            price=place_data['price'],
+            latitude=place_data['latitude'],
+            longitude=place_data['longitude'],
+            owner=owner
+        )
+
+        for amenity in amenity_objs:
+            place.add_amenity(amenity)
+
+        self.place_repo.add(place)
+        return place
+
+    def get_place(self, place_id):
+        return self.place_repo.get(place_id)
+
+    def get_all_places(self):
+        return self.place_repo.get_all()
+
+    def update_place(self, place_id, place_data):
+        place = self.get_place(place_id)
+        if not place:
+            return None
+
+        # Optional: Re-validate attributes
+        place.update(place_data)
+        return place
+
+
+
     # Reviews Methods ----------------------------------------------------------
     
     def create_review(self, review_data):
