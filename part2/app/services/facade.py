@@ -132,6 +132,13 @@ class HBnBFacade:
     def update_review(self, review_id, review_data):
         if not self.get_review(review_id):
             raise ValueError('Review not found')
+        if not self.get_user(review_data['user_id']):
+            raise ValueError('User not found')
+        if not self.get_place(review_data['place_id']):
+            raise ValueError('Place not found')
+        if review_data['rating'] < 1 or review_data['rating'] > 5:
+            raise ValueError('Rating must be a number between 1 and 5, inclusive')
+        
         self.review_repo.update(review_id, review_data)
 
     def delete_review(self, review_id):
