@@ -2,12 +2,14 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
+        self.review_repo = InMemoryRepository()
     
     # User Methods -----------------------------------------------------------
     def create_user(self, user_data):
@@ -101,27 +103,38 @@ class HBnBFacade:
 
 
     # Reviews Methods ----------------------------------------------------------
-    
     def create_review(self, review_data):
-        # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
-        pass
+        if not self.get_user(review_data['user_id']):
+            raise ValueError('User not found')
+        if not self.get_place(review_data['place_id']):
+            raise ValueError('Place not found')
+        if review_data['rating'] < 1 or review_data['rating'] > 5:
+            raise ValueError('Rating must be a number between 1 and 5, inclusive')
+
+        new_review = Review(
+            text=review_data['text'],
+            rating=review_data['rating'],
+            place=review_data['place_id'],
+            user=review_data['user_id']
+        )
+        self.review_repo.add(new_review)
+        return new_review
 
     def get_review(self, review_id):
-        # Placeholder for logic to retrieve a review by ID
-        pass
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        # Placeholder for logic to retrieve all reviews
-        pass
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        # Placeholder for logic to retrieve all reviews for a specific place
-        pass
+        return self.review_repo.get_by_attribute('place', place_id)
 
     def update_review(self, review_id, review_data):
-        # Placeholder for logic to update a review
-        pass
+        if not self.get_review(review_id):
+            raise ValueError('Review not found')
+        self.review_repo.update(review_id, review_data)
 
     def delete_review(self, review_id):
-        # Placeholder for logic to delete a review
-        pass
+        if not self.get_review(review_id):
+            raise ValueError('Review not found')
+        self.review_repo.delete(review_id)
