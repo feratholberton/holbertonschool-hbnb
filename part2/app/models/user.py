@@ -20,3 +20,4 @@ class User(BaseModel):
         self.is_admin = is_admin
         
         self.places = []
+        self.reviews = []
