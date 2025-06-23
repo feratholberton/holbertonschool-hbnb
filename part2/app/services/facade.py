@@ -117,6 +117,10 @@ class HBnBFacade:
             user=review_data['user_id'],
             place=review_data['place_id']
         )
+        
+        place_a = self.get_place(review_data['place_id'])
+        place_a.add_review(new_review)
+        
         self.review_repo.add(new_review)
         return new_review
 
