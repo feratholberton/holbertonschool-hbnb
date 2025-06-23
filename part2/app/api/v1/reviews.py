@@ -22,10 +22,11 @@ class ReviewList(Resource):
         try:
             new_review = facade.create_review(review_data)
             return {
-            'text': new_review.text,
-            'rating': new_review.rating,
-            'place_id': new_review.place,
-            'user_id': new_review.user
+                'review_id': new_review.id,
+                'text': new_review.text,
+                'rating': new_review.rating,
+                'user_id': new_review.user,
+                'place_id': new_review.place
             }, 201
         except ValueError as error:
             if str(error) == 'User not found':
