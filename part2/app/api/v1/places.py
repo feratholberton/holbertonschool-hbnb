@@ -3,19 +3,6 @@ from app.services import facade
 
 api = Namespace('places', description='Place operations')
 
-# Models for nested data
-amenity_model = api.model('Amenity', {
-    'id': fields.String,
-    'name': fields.String
-})
-
-user_model = api.model('Owner', {
-    'id': fields.String,
-    'first_name': fields.String,
-    'last_name': fields.String,
-    'email': fields.String
-})
-
 place_model = api.model('Place', {
     'title': fields.String(required=True),
     'description': fields.String,
@@ -28,7 +15,7 @@ place_model = api.model('Place', {
 
 @api.route('/')
 class PlaceList(Resource):
-    @api.expect(place_model)
+    @api.expect(place_model, validate=True)
     @api.response(201, 'Place created')
     @api.response(400, 'Bad Request')
     def post(self):
@@ -37,10 +24,14 @@ class PlaceList(Resource):
             data = api.payload
             place = facade.create_place(data)
             return {
-                "id": place.id,
-                "title": place.title,
-                "latitude": place.latitude,
-                "longitude": place.longitude
+                'id': place.id,
+                'title': place.title,
+                'description': place.description,
+                'price': place.price,
+                'latitude': place.latitude,
+                'longitude': place.longitude,
+                'owner_id': place.owner.id,
+                'amenities': [a.id for a in place.amenities]
             }, 201
         except ValueError as e:
             return {"error": str(e)}, 400
@@ -48,15 +39,14 @@ class PlaceList(Resource):
     @api.response(200, 'List of places retrieved')
     def get(self):
         places = facade.get_all_places()
-        result = []
-        for place in places:
-            result.append({
-                "id": place.id,
-                "title": place.title,
-                "latitude": place.latitude,
-                "longitude": place.longitude
-            })
-        return result, 200
+        return [
+            {
+                'id': p.id,
+                'title': p.title,
+                'latitude': p.latitude,
+                'longitude': p.longitude
+            } for p in places
+        ], 200
 
 
 @api.route('/<place_id>')
@@ -86,14 +76,24 @@ class PlaceResource(Resource):
             ]
         }, 200
 
-    @api.expect(place_model)
+    @api.expect(place_model, validate=True)
     @api.response(200, 'Place updated')
     @api.response(404, 'Place not found')
+    @api.response(400, 'Invalid input data')
     def put(self, place_id):
-        try:
-            updated = facade.update_place(place_id, api.payload)
-            if not updated:
-                return {"error": "Place not found"}, 404
-            return {"message": "Place updated successfully"}, 200
-        except ValueError as e:
-            return {"error": str(e)}, 400
+        """Update a place"""
+        place_data = api.payload
+        updated = facade.update_place(place_id, place_data)
+        if not updated:
+            return {'error': 'Place not found'}, 404
+
+        return {
+            'id': updated.id,
+            'title': updated.title,
+            'description': updated.description,
+            'price': updated.price,
+            'latitude': updated.latitude,
+            'longitude': updated.longitude,
+            'owner_id': updated.owner.id,
+            'amenities': [a.id for a in updated.amenities]
+        }, 200
