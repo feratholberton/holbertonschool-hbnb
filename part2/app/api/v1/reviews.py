@@ -30,9 +30,11 @@ class ReviewList(Resource):
         except ValueError as error:
             if str(error) == 'User not found':
                 return {'error': 'User not found'}, 404
-            elif str(error) == 'Place not found':
+            
+            if str(error) == 'Place not found':
                 return {'error': 'Place not found'}, 404
-            else:
+            
+            if str(error) == 'Rating must be a number between 1 and 5, inclusive':
                 return {'error': 'Rating must be a number between 1 and 5, inclusive'}, 400
 
     @api.response(200, 'List of reviews retrieved successfully')
