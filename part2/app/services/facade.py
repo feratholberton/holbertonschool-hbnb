@@ -96,13 +96,25 @@ class HBnBFacade:
         if not place:
             return None
 
-        # Optional: Re-validate attributes
+        # Update fields
         place.update(place_data)
+
+        # Handle amenities update
+        if 'amenities' in place_data:
+            if not isinstance(place_data['amenities'], list):
+                raise ValueError("Amenities must be a list of amenity IDs")
+            place.amenities = []
+            for amenity_id in place_data['amenities']:
+                amenity = self.amenity_repo.get(amenity_id)
+                if not amenity:
+                    raise ValueError(f"Amenity with ID {amenity_id} not found")
+                place.add_amenity(amenity)
+
         return place
 
 
 
-    # Reviews Methods ----------------------------------------------------------
+    # Review Methods -------------------------------------------------------
     def create_review(self, review_data):
         if not self.get_user(review_data['user_id']):
             raise ValueError('User not found')
