@@ -16,7 +16,25 @@ def create_app(config_class=DevelopmentConfig):
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API')
+    # This is for not to curl everything
+    authorizations = {
+        'Bearer Auth': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization',
+            'description': 'Paste your JWT token here with **Bearer <your_token>**'
+        }
+    }
+
+    api = Api(
+        app,
+        version='1.0',
+        title='HBnB API',
+        description='HBnB Application API',
+        doc='/',
+        authorizations=authorizations,
+        security='Bearer Auth'
+    )
 
     # Register the users namespace
     api.add_namespace(users_ns, path='/api/v1/users')
