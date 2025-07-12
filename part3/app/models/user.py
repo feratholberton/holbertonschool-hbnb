@@ -64,6 +64,8 @@ class User(BaseModel):
         }
 
     def update(self, data):
+        if 'password' in data:
+            raise ValueError("Password cannot be updated through this method.")
         for field in ['first_name', 'last_name', 'email', 'is_admin']:
             if field in data:
                 setattr(self, field, data[field])
