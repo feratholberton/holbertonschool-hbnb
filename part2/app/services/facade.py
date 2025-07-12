@@ -177,4 +177,5 @@ class HBnBFacade:
             return None
 
         review.place.reviews = [r for r in review.place.reviews if r.id != review.id]
-        return self.review_repo.delete(review_id)
+        self.review_repo.delete(review_id)
+        return True
