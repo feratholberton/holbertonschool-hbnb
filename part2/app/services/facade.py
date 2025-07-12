@@ -99,6 +99,13 @@ class HBnBFacade:
         # Update fields
         place.update(place_data)
 
+        # Handle owner update
+        if 'owner_id' in place_data:
+            new_owner = self.user_repo.get(place_data['owner_id'])
+            if not new_owner:
+                raise ValueError("Owner not found")
+            place.owner = new_owner
+
         # Handle amenities update
         if 'amenities' in place_data:
             if not isinstance(place_data['amenities'], list):
