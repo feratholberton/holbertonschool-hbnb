@@ -10,7 +10,8 @@ class HBnBFacade:
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
-    
+
+
     # User Methods -----------------------------------------------------------
     def create_user(self, user_data):
         user = User(**user_data)
@@ -34,7 +35,6 @@ class HBnBFacade:
         return user
 
 
-
     # Amenities Methods -------------------------------------------------------
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
@@ -53,7 +53,6 @@ class HBnBFacade:
             return None
         amenity.update(amenity_data)
         return amenity
-
 
 
     # Place Methods -------------------------------------------------------
@@ -120,26 +119,28 @@ class HBnBFacade:
         return place
 
 
-
     # Review Methods -------------------------------------------------------
     def create_review(self, review_data):
-        if not self.get_user(review_data['user_id']):
+        user = self.get_user(review_data['user_id'])
+        if not user:
             raise ValueError('User not found')
-        if not self.get_place(review_data['place_id']):
+
+        place = self.get_place(review_data['place_id'])
+        if not place:
             raise ValueError('Place not found')
-        if review_data['rating'] < 1 or review_data['rating'] > 5:
-            raise ValueError('Rating must be a number between 1 and 5, inclusive')
+
+        rating = review_data['rating']
+        if not (1 <= rating <= 5):
+            raise ValueError('Rating must be between 1 and 5')
 
         new_review = Review(
             text=review_data['text'],
-            rating=review_data['rating'],
-            user=review_data['user_id'],
-            place=review_data['place_id']
+            rating=rating,
+            user=user,
+            place=place
         )
-        
-        place_a = self.get_place(review_data['place_id'])
-        place_a.add_review(new_review)
-        
+
+        place.add_review(new_review)
         self.review_repo.add(new_review)
         return new_review
 
@@ -148,23 +149,32 @@ class HBnBFacade:
 
     def get_all_reviews(self):
         return self.review_repo.get_all()
-
+    
     def get_reviews_by_place(self, place_id):
-        return self.review_repo.get_by_attribute('place', place_id)
+        return [review for review in self.review_repo.get_all() if review.place.id == place_id]
 
     def update_review(self, review_id, review_data):
-        if not self.get_review(review_id):
-            raise ValueError('Review not found')
-        if not self.get_user(review_data['user_id']):
+        review = self.get_review(review_id)
+        if not review:
+            return None
+
+        user = self.get_user(review_data['user_id'])
+        if not user:
             raise ValueError('User not found')
-        if not self.get_place(review_data['place_id']):
+
+        place = self.get_place(review_data['place_id'])
+        if not place:
             raise ValueError('Place not found')
-        if review_data['rating'] < 1 or review_data['rating'] > 5:
-            raise ValueError('Rating must be a number between 1 and 5, inclusive')
-        
-        self.review_repo.update(review_id, review_data)
+
+        review.user = user
+        review.place = place
+        review.update(review_data)
+        return review
 
     def delete_review(self, review_id):
-        if not self.get_review(review_id):
-            raise ValueError('Review not found')
-        self.review_repo.delete(review_id)
+        review = self.get_review(review_id)
+        if not review:
+            return None
+
+        review.place.reviews = [r for r in review.place.reviews if r.id != review.id]
+        return self.review_repo.delete(review_id)
