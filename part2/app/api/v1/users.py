@@ -16,10 +16,9 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     def post(self):
-        """Register a new user"""
+        """Create new user"""
         user_data = api.payload
 
-        # Simulate email uniqueness check (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
@@ -29,7 +28,7 @@ class UserList(Resource):
 
     @api.response(200, 'List of users retrieved')
     def get(self):
-        """Retrieve all users"""
+        """Get all users"""
         users = facade.get_all_users()
         return [ user.to_dict() for user in users ], 200
 
@@ -38,7 +37,7 @@ class UserResource(Resource):
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
-        """Get user details by ID"""
+        """Get user by ID"""
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404

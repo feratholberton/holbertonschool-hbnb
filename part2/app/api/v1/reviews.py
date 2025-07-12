@@ -16,6 +16,7 @@ class ReviewList(Resource):
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input or entity not found')
     def post(self):
+        """Create new review"""
         try:
             review_data = api.payload
             new_review = facade.create_review(review_data)
@@ -25,6 +26,7 @@ class ReviewList(Resource):
 
     @api.response(200, 'List of reviews retrieved')
     def get(self):
+        """Get all reviews"""
         reviews = facade.get_all_reviews()
         return [review.to_dict() for review in reviews], 200
 
@@ -33,6 +35,7 @@ class ReviewResource(Resource):
     @api.response(200, 'Review retrieved')
     @api.response(404, 'Review not found')
     def get(self, review_id):
+        """Get review by ID"""
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
@@ -43,6 +46,7 @@ class ReviewResource(Resource):
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input')
     def put(self, review_id):
+        """Update review by ID"""
         try:
             updated = facade.update_review(review_id, api.payload)
             if not updated:
@@ -54,6 +58,7 @@ class ReviewResource(Resource):
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
+        """Delete review by ID"""
         deleted = facade.delete_review(review_id)
         if not deleted:
             return {'error': 'Review not found'}, 404
@@ -64,6 +69,7 @@ class PlaceReviews(Resource):
     @api.response(200, 'List of reviews for place retrieved')
     @api.response(404, 'Place not found')
     def get(self, place_id):
+        """Get all reviews from Place ID"""
         reviews = facade.get_reviews_by_place(place_id)
         if reviews is None:
             return {'error': 'Place not found'}, 404
