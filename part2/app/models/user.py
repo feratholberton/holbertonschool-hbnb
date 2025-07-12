@@ -1,4 +1,3 @@
-from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
 from app.models.base import BaseModel
 
