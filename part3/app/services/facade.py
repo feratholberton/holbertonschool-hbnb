@@ -24,7 +24,7 @@ class HBnBFacade:
             password=user_data["password"],
             is_admin=user_data.get("is_admin", False)
         )
-        print(user._password)
+        
         self.user_repo.add(user)
         return user
 
@@ -67,7 +67,7 @@ class HBnBFacade:
 
     # Place Methods -------------------------------------------------------
     def create_place(self, place_data):
-        owner = self.user_repo.get(place_data['owner_id'])
+        owner = self.user_repo.get(place_data['user_id'])
         if not owner:
             raise ValueError("Owner not found")
 
@@ -91,6 +91,16 @@ class HBnBFacade:
         for amenity in amenity_objs:
             place.add_amenity(amenity)
 
+        if 'amenity_ids' in place_data:
+            if not isinstance(place_data['amenity_ids'], list):
+                raise ValueError("Amenities must be a list of amenity IDs")
+
+            for amenity_id in place_data['amenity_ids']:
+                amenity = self.amenity_repo.get(amenity_id)
+                if not amenity:
+                    raise ValueError(f"Amenity with ID {amenity_id} not found")
+                place.add_amenity(amenity)
+
         self.place_repo.add(place)
         return place
 
@@ -109,18 +119,20 @@ class HBnBFacade:
         place.update(place_data)
 
         # Handle owner update
-        if 'owner_id' in place_data:
-            new_owner = self.user_repo.get(place_data['owner_id'])
+        if 'user_id' in place_data:
+            new_owner = self.user_repo.get(place_data['user_id'])
             if not new_owner:
                 raise ValueError("Owner not found")
             place.owner = new_owner
 
         # Handle amenities update
-        if 'amenities' in place_data:
-            if not isinstance(place_data['amenities'], list):
+        if 'amenity_ids' in place_data:
+            if not isinstance(place_data['amenity_ids'], list):
                 raise ValueError("Amenities must be a list of amenity IDs")
+
             place.amenities = []
-            for amenity_id in place_data['amenities']:
+
+            for amenity_id in place_data['amenity_ids']:
                 amenity = self.amenity_repo.get(amenity_id)
                 if not amenity:
                     raise ValueError(f"Amenity with ID {amenity_id} not found")
