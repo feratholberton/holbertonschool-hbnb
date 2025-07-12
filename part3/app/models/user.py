@@ -1,13 +1,15 @@
-from email_validator import validate_email, EmailNotValidError
 from app.models.base import BaseModel
-
+from email_validator import validate_email, EmailNotValidError
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 class User(BaseModel):
-    def __init__(self, first_name: str, last_name: str, email: str, is_admin: bool = False):
+    def __init__(self, first_name: str, last_name: str, email: str, password, is_admin: bool = False):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.password = None
+        self.hash_password(password)
         self.is_admin = is_admin
         self.places = []
         self.reviews = []
@@ -43,6 +45,14 @@ class User(BaseModel):
             self._email = email_validation.normalized
         except EmailNotValidError:
             raise ValueError("Invalid email format")
+
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        self._password = generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verifies if the provided password matches the hashed password."""
+        return check_password_hash(self._password, password)
 
     def to_dict(self):
         return {
