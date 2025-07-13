@@ -180,17 +180,13 @@ class HBnBFacade:
         if not review:
             return None
 
-        user = self.get_user(review_data['user_id'])
-        if not user:
-            raise ValueError('User not found')
+        # Only allow text and rating to be updated
+        allowed_fields = {
+            'text': review_data.get('text', review.text),
+            'rating': review_data.get('rating', review.rating)
+        }
 
-        place = self.get_place(review_data['place_id'])
-        if not place:
-            raise ValueError('Place not found')
-
-        review.user = user
-        review.place = place
-        review.update(review_data)
+        review.update(allowed_fields)
         return review
 
     def delete_review(self, review_id):
