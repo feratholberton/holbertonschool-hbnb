@@ -11,7 +11,6 @@ class HBnBFacade:
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
 
-
     # User Methods -----------------------------------------------------------
     def create_user(self, user_data):
         if self.user_repo.get_by_attribute("email", user_data["email"]):
@@ -44,7 +43,6 @@ class HBnBFacade:
         user.update(data)
         return user
 
-
     # Amenities Methods -------------------------------------------------------
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
@@ -63,7 +61,6 @@ class HBnBFacade:
             return None
         amenity.update(amenity_data)
         return amenity
-
 
     # Place Methods -------------------------------------------------------
     def create_place(self, place_data):
@@ -139,7 +136,6 @@ class HBnBFacade:
                 place.add_amenity(amenity)
 
         return place
-
 
     # Review Methods -------------------------------------------------------
     def create_review(self, review_data):
