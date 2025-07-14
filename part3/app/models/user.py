@@ -1,18 +1,17 @@
 from app.models.base import BaseModel
 from email_validator import validate_email, EmailNotValidError
 from flask_bcrypt import generate_password_hash, check_password_hash
+from app.extensions import db
 
 class User(BaseModel):
-    def __init__(self, first_name: str, last_name: str, email: str, password, is_admin: bool = False):
-        super().__init__()
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = None
-        self.hash_password(password)
-        self.is_admin = is_admin
-        self.places = []
-        self.reviews = []
+    __tablename__ = 'users'
+
+    _first_name = db.Column('first_name',db.String(50), nullable=False)
+    _last_name = db.Column('last_name',db.String(50), nullable=False)
+    _email = db.Column('email',db.String(120), nullable=False, unique=True)
+    _password = db.Column('password',db.String(128), nullable=False)
+    _is_admin = db.Column('is_admin',db.Boolean, default=False)
+
 
     @property
     def first_name(self):

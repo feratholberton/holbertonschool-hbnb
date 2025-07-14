@@ -8,6 +8,8 @@ from app.api.v1.auth import api as auth_ns
 from config import DevelopmentConfig
 from app.extensions import bcrypt
 from app.extensions import jwt
+from app.extensions import db
+
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
@@ -15,6 +17,7 @@ def create_app(config_class=DevelopmentConfig):
 
     bcrypt.init_app(app)
     jwt.init_app(app)
+    db.init_app(app)
 
     # This is for not to curl everything
     authorizations = {
