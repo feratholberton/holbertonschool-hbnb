@@ -5,9 +5,10 @@ from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 
+
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = SQLAlchemyRepository()
+        self.user_repo = SQLAlchemyRepository(User)
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
@@ -17,14 +18,13 @@ class HBnBFacade:
         if self.user_repo.get_by_attribute("email", user_data["email"]):
             raise ValueError("Email already exists")
 
-        user = User(
-            first_name=user_data["first_name"],
-            last_name=user_data["last_name"],
-            email=user_data["email"],
-            password=user_data["password"],
-            is_admin=user_data.get("is_admin", False)
-        )
-        
+        user = User()
+        user.first_name=user_data["first_name"]
+        user.last_name=user_data["last_name"]
+        user.email=user_data["email"]
+        user.is_admin=user_data.get("is_admin", False)
+
+        user.hash_password(user_data["password"])
         self.user_repo.add(user)
         return user
 

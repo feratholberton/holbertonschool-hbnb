@@ -44,6 +44,14 @@ class User(BaseModel):
             self._email = email_validation.normalized
         except EmailNotValidError:
             raise ValueError("Invalid email format")
+    
+    @property
+    def is_admin(self):
+        return self._is_admin
+
+    @is_admin.setter
+    def is_admin(self, value):
+        self._is_admin = bool(value)
 
     def hash_password(self, password):
         """Hashes the password before storing it."""
@@ -56,10 +64,10 @@ class User(BaseModel):
     def to_dict(self):
         return {
             "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "email": self.email,
-            "is_admin": self.is_admin
+            "first_name": self._first_name,
+            "last_name": self._last_name,
+            "email": self._email,
+            "is_admin": self._is_admin
         }
 
     def update(self, data):
