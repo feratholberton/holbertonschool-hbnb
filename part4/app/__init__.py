@@ -8,6 +8,23 @@ from app.api.v1.auth import api as auth_ns
 from config import DevelopmentConfig
 from app.extensions import bcrypt
 from app.extensions import jwt
+from app.services import facade
+
+def seed_admin_user(app):
+    email = app.config['ADMIN_EMAIL']
+    password = app.config['ADMIN_PASSWORD']
+    first_name = app.config['ADMIN_FIRST_NAME']
+    last_name = app.config['ADMIN_LAST_NAME']
+
+    existing_user = facade.get_user_by_email(email)
+    if not existing_user:
+        facade.create_user({
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "password": password,
+            "is_admin": True
+        })
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
@@ -16,24 +33,18 @@ def create_app(config_class=DevelopmentConfig):
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    # This is for not to curl everything
-    authorizations = {
-        'Bearer Auth': {
-            'type': 'apiKey',
-            'in': 'header',
-            'name': 'Authorization',
-            'description': 'Paste your JWT token here with **Bearer <your_token>**'
-        }
-    }
+    seed_admin_user(app)
 
+    # This is for not to curl everything
+    # Swagger Authorizations
     api = Api(
         app,
-        version='1.0',
-        title='HBnB API',
-        description='HBnB Application API',
-        doc='/',
-        authorizations=authorizations,
-        security='Bearer Auth'
+        version=app.config['RESTX_VERSION'],
+        title=app.config['RESTX_TITLE'],
+        description=app.config['RESTX_DESCRIPTION'],
+        doc=app.config['RESTX_DOC'],
+        authorizations=app.config['RESTX_AUTHORIZE'],
+        security=app.config['RESTX_SECURITY']
     )
 
     # Register the users namespace
