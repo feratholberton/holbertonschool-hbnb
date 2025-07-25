@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
 
 api = Namespace('users', description='User operations')
@@ -25,10 +25,15 @@ class UserList(Resource):
     @api.expect(user_create_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
+    @jwt_required()
     def post(self):
         """Create new user"""
-        user_data = api.payload
+        is_admin = get_jwt().get("is_admin", False)
+        
+        if not is_admin:
+            return {'error': 'Admin privileges required'}, 403
 
+        user_data = api.payload
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
@@ -63,7 +68,11 @@ class UserResource(Resource):
     def put(self, user_id):
         """Update user by ID"""
         current_user_id = get_jwt_identity()
-        if current_user_id != user_id:
+        is_admin = get_jwt().get("is_admin", False)
+
+        # if current_user_id != user_id:
+            # return {'error': 'Unauthorized'}, 403
+        if not is_admin and current_user_id != user_id:
             return {'error': 'Unauthorized'}, 403
 
         user = facade.get_user(user_id)

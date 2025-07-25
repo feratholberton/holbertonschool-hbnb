@@ -5,7 +5,7 @@ class Config:
     DEBUG = False
 
     # Vars to seed the Admin user
-    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'fer@fal.con')
+    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@hbnb.com')
     ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', '123456')
     ADMIN_FIRST_NAME = os.getenv('ADMIN_FIRST_NAME', 'Admin')
     ADMIN_LAST_NAME = os.getenv('ADMIN_LAST_NAME', 'User')
