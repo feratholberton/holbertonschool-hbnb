@@ -152,6 +152,17 @@ class HBnBFacade:
 
         return place
 
+    def delete_place(self, place_id, requesting_user, is_admin=False):
+        place = self.get_place(place_id)
+        if not place:
+            return None
+
+        if not is_admin and place.owner.id != requesting_user.id:
+            raise ValueError("Unauthorized")
+
+        self.place_repo.delete(place_id)
+        return True
+
     # Review Methods -------------------------------------------------------
     def create_review(self, review_data):
         user = self.get_user(review_data['user_id'])

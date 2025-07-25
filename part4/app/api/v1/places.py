@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
 
 api = Namespace('places', description='Place operations')
@@ -57,13 +57,15 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update place by ID"""
         user_id = get_jwt_identity()
+        is_admin = get_jwt().get("is_admin", False)
+
         user = facade.get_user(user_id)
         place = facade.get_place(place_id)
 
         if not place:
             return {'error': 'Place not found'}, 404
 
-        if place.owner.id != user.id:
+        if not is_admin and place.owner.id != user.id:
             return {'error': 'Unauthorized'}, 403
 
         try:
@@ -71,3 +73,21 @@ class PlaceResource(Resource):
             return updated_place.to_dict(), 200
         except ValueError as e:
             return {'error': str(e)}, 400
+
+    @api.response(204, 'Place deleted')
+    @api.response(403, 'Unauthorized')
+    @api.response(404, 'Place not found')
+    @jwt_required()
+    def delete(self, place_id):
+        user_id = get_jwt_identity()
+        is_admin = get_jwt().get("is_admin", False)
+
+        user = facade.get_user(user_id)
+
+        try:
+            result = facade.delete_place(place_id, user, is_admin=is_admin)
+            if not result:
+                return {'error': 'Place not found'}, 404
+            return '', 204
+        except ValueError as e:
+            return {'error': str(e)}, 403
