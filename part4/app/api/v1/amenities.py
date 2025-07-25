@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
 
 api = Namespace('amenities', description='Amenity operations')
@@ -13,8 +14,14 @@ class AmenityList(Resource):
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Create new amenity"""
+        is_admin = get_jwt().get("is_admin", False)
+
+        if not is_admin:
+            return {'error': 'Unauthorized'}, 403
+
         try:
             amenity_data = api.payload
             new_amenity = facade.create_amenity(amenity_data)
@@ -27,7 +34,6 @@ class AmenityList(Resource):
         """Retrieve all amenities"""
         amenities = facade.get_all_amenities()
         return [amenity.to_dict() for amenity in amenities], 200
-
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
@@ -44,8 +50,14 @@ class AmenityResource(Resource):
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, amenity_id):
         """Update amenity by ID"""
+        is_admin = get_jwt().get("is_admin", False)
+
+        if not is_admin:
+            return {'error': 'Unauthorized'}, 403
+
         try:
             updated = facade.update_amenity(amenity_id, api.payload)
             if not updated:
