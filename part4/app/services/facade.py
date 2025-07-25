@@ -36,11 +36,26 @@ class HBnBFacade:
     def get_all_users(self):
         return self.user_repo.get_all()
 
-    def update_user(self, user_id, data):
-        user = self.get_user(user_id)
+    def update_user(self, user_id, data, allow_email_change=False, allow_password_change=False):
+        user = self.user_repo.get(user_id)
         if not user:
-            return None
-        user.update(data)
+            raise ValueError("User not found")
+
+        if "email" in data:
+            if not allow_email_change:
+                raise ValueError("Email cannot be updated through this method.")
+            existing = self.get_user_by_email(data["email"])
+            if existing and existing.id != user_id:
+                raise ValueError("Email already in use")
+            user.email = data["email"]
+
+        if "password" in data:
+            if not allow_password_change:
+                raise ValueError("Password cannot be updated through this method.")
+            user.set_password(data["password"])
+
+        user.first_name = data["first_name"]
+        user.last_name = data["last_name"]
         return user
 
     # Amenities Methods -------------------------------------------------------

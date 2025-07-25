@@ -17,7 +17,9 @@ user_create_model = api.model('UserCreate', {
 # User model for update (excludes password and is_admin)
 user_update_model = api.model('UserUpdate', {
     'first_name': fields.String(required=True, description='First name of the user'),
-    'last_name': fields.String(required=True, description='Last name of the user')
+    'last_name': fields.String(required=True, description='Last name of the user'),
+    'email': fields.String(required=False, description='Email of the user'),
+    'password': fields.String(required=False, description='User password', min_length=6)
 })
 
 @api.route('/')
@@ -70,8 +72,6 @@ class UserResource(Resource):
         current_user_id = get_jwt_identity()
         is_admin = get_jwt().get("is_admin", False)
 
-        # if current_user_id != user_id:
-            # return {'error': 'Unauthorized'}, 403
         if not is_admin and current_user_id != user_id:
             return {'error': 'Unauthorized'}, 403
 
@@ -80,8 +80,25 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
 
         data = api.payload
+
+        if not is_admin:
+            data.pop("email", None)
+            data.pop("password", None)
+
+        if is_admin and "email" in data:
+            existing_user = facade.get_user_by_email(data["email"])
+            if existing_user and existing_user.id != user_id:
+                return {'error': 'Email already in use'}, 400
+
         try:
-            updated_user = facade.update_user(user_id, data)
+            allow_email_change = is_admin
+            allow_password_change = is_admin
+
+            updated_user = facade.update_user(
+                user_id, data,
+                allow_email_change=allow_email_change,
+                allow_password_change=allow_password_change
+            )
             return updated_user.to_dict(), 200
         except ValueError as error:
             return {'error': str(error)}, 400

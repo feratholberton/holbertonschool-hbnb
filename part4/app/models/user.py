@@ -54,6 +54,11 @@ class User(BaseModel):
         """Verifies if the provided password matches the hashed password."""
         return check_password_hash(self._password, password)
 
+    def set_password(self, password):
+        """Public method to update and hash the password."""
+        self.hash_password(password)
+        self.save()
+
     def to_dict(self):
         return {
             "id": self.id,
