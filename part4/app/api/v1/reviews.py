@@ -73,17 +73,18 @@ class ReviewResource(Resource):
         """Update review by ID"""
         try:
             user_id = get_jwt_identity()
+            is_admin = get_jwt().get("is_admin", False)
             review = facade.get_review(review_id)
             if not review:
                 return {'error': 'Review not found'}, 404
+
+            if not is_admin and review.user_id != user_id:
+                return {'error': 'Unauthorized'}, 403
+
+            updated_review = facade.update_review(review_id, api.payload)
+            return updated_review.to_dict(), 200
         except ValueError as error:
             return {'error': str(error)}, 400
-
-        if review.user.id != user_id:
-            return {'error': 'Unauthorized'}, 403
-
-        updated_review = facade.update_review(review_id, api.payload)
-        return updated_review.to_dict(), 200
 
     @api.response(204, 'Review deleted')
     @api.response(401, 'Unauthenticated')

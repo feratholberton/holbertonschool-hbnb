@@ -1,9 +1,10 @@
 from app.persistence.repository import InMemoryRepository
+from app.persistence.repository import SQLAlchemyRepository
+from app.persistence.user_repository import UserRepository
+
 from app.extensions import db
 
 from app.models.user import User
-from app.persistence.user_repository import UserRepository
-
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
@@ -12,8 +13,8 @@ class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
         self.amenity_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
 
     # User Methods -----------------------------------------------------------
     def create_user(self, user_data):
@@ -78,35 +79,14 @@ class HBnBFacade:
         if not owner:
             raise ValueError("Owner not found")
 
-        # Convert amenity IDs to Amenity instances
-        amenity_objs = []
-        for amenity_id in place_data.get('amenities', []):
-            amenity = self.amenity_repo.get(amenity_id)
-            if not amenity:
-                raise ValueError(f"Amenity with ID {amenity_id} not found")
-            amenity_objs.append(amenity)
-
         place = Place(
             title=place_data['title'],
             description=place_data.get('description', ''),
             price=place_data['price'],
             latitude=place_data['latitude'],
             longitude=place_data['longitude'],
-            owner=owner
+            owner_id=owner.id
         )
-
-        for amenity in amenity_objs:
-            place.add_amenity(amenity)
-
-        if 'amenity_ids' in place_data:
-            if not isinstance(place_data['amenity_ids'], list):
-                raise ValueError("Amenities must be a list of amenity IDs")
-
-            for amenity_id in place_data['amenity_ids']:
-                amenity = self.amenity_repo.get(amenity_id)
-                if not amenity:
-                    raise ValueError(f"Amenity with ID {amenity_id} not found")
-                place.add_amenity(amenity)
 
         self.place_repo.add(place)
         return place
@@ -122,29 +102,8 @@ class HBnBFacade:
         if not place:
             return None
 
-        # Update fields
         place.update(place_data)
-
-        # Handle owner update
-        if 'user_id' in place_data:
-            new_owner = self.user_repo.get(place_data['user_id'])
-            if not new_owner:
-                raise ValueError("Owner not found")
-            place.owner = new_owner
-
-        # Handle amenities update
-        if 'amenity_ids' in place_data:
-            if not isinstance(place_data['amenity_ids'], list):
-                raise ValueError("Amenities must be a list of amenity IDs")
-
-            place.amenities = []
-
-            for amenity_id in place_data['amenity_ids']:
-                amenity = self.amenity_repo.get(amenity_id)
-                if not amenity:
-                    raise ValueError(f"Amenity with ID {amenity_id} not found")
-                place.add_amenity(amenity)
-
+        db.session.commit() 
         return place
 
     def delete_place(self, place_id, requesting_user, is_admin=False):
@@ -152,7 +111,7 @@ class HBnBFacade:
         if not place:
             return None
 
-        if not is_admin and place.owner.id != requesting_user.id:
+        if not is_admin:
             raise ValueError("Unauthorized")
 
         self.place_repo.delete(place_id)
@@ -168,18 +127,23 @@ class HBnBFacade:
         if not place:
             raise ValueError('Place not found')
 
-        rating = review_data['rating']
-        if not (1 <= rating <= 5):
-            raise ValueError('Rating must be between 1 and 5')
+        if place.owner_id == user.id:
+            raise ValueError("Cannot review your own place")
+
+        existing_review = self.review_repo.get_by_attribute_multiple({
+            "user_id": user.id,
+            "place_id": place.id
+        })
+        if existing_review:
+            raise ValueError("You have already reviewed this place")
 
         new_review = Review(
             text=review_data['text'],
-            rating=rating,
-            user=user,
-            place=place
+            rating=review_data['rating'],
+            user_id=user.id,
+            place_id=place.id
         )
 
-        place.add_review(new_review)
         self.review_repo.add(new_review)
         return new_review
 
@@ -197,13 +161,8 @@ class HBnBFacade:
         if not review:
             return None
 
-        # Only allow text and rating to be updated
-        allowed_fields = {
-            'text': review_data.get('text', review.text),
-            'rating': review_data.get('rating', review.rating)
-        }
-
-        review.update(allowed_fields)
+        review.update(review_data)
+        db.session.commit()
         return review
 
     def delete_review(self, review_id):
@@ -211,6 +170,5 @@ class HBnBFacade:
         if not review:
             return None
 
-        review.place.reviews = [r for r in review.place.reviews if r.id != review.id]
         self.review_repo.delete(review_id)
         return True
