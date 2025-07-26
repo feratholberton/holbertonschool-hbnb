@@ -1,12 +1,16 @@
 from app.persistence.repository import InMemoryRepository
+from app.extensions import db
+
 from app.models.user import User
+from app.persistence.user_repository import UserRepository
+
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
+        self.user_repo = UserRepository()
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
@@ -46,6 +50,7 @@ class HBnBFacade:
 
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
+        db.session.commit()
         return user
 
     # Amenities Methods -------------------------------------------------------

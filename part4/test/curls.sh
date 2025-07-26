@@ -4,14 +4,27 @@ curl -X 'GET' \
   -H 'accept: application/json'
 
 # Create user
+# curl -X 'POST' \
+#   'http://127.0.0.1:5000/api/v1/users/' \
+#   -H 'accept: application/json' \
+#   -H 'Content-Type: application/json' \
+#   -d '{
+#   "first_name": "Fer",
+#   "last_name": "Fal",
+#   "email": "fer@fal.con",
+#   "password": "123456",
+#   "is_admin": false
+# }'
+
 curl -X 'POST' \
   'http://127.0.0.1:5000/api/v1/users/' \
   -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MzU0OTczMSwianRpIjoiODM0MzljYmUtZWFmYS00YmNlLTk4ZDEtZGNhYzI5MjhlYzI4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImRmODRkZWY5LWYwOTQtNDVhZi1iNmIzLWE2Nzg2OGE4NzcyMSIsIm5iZiI6MTc1MzU0OTczMSwiY3NyZiI6ImNjNjNiZjExLTJiNjgtNGU5MC1hMzkyLTQ1ZjE4ODgxMTY5YSIsImV4cCI6MTc1MzU1MDYzMSwiaXNfYWRtaW4iOnRydWV9.CTBDOu2KfUP8q5beJJpSNkUHjSPmK5oKt4eVpJ9jmeg' \
   -H 'Content-Type: application/json' \
   -d '{
   "first_name": "Fer",
   "last_name": "Fal",
-  "email": "fer@fal.con",
+  "email": "elferaa@elfal.con",
   "password": "123456",
   "is_admin": false
 }'
