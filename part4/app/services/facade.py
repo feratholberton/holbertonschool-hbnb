@@ -12,7 +12,7 @@ from app.models.review import Review
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
         self.place_repo = SQLAlchemyRepository(Place)
         self.review_repo = SQLAlchemyRepository(Review)
 
@@ -71,6 +71,7 @@ class HBnBFacade:
         if not amenity:
             return None
         amenity.update(amenity_data)
+        db.session.commit()
         return amenity
 
     # Place Methods -------------------------------------------------------
@@ -88,6 +89,16 @@ class HBnBFacade:
             owner_id=owner.id
         )
 
+        amenity_ids = place_data.get("amenity_ids", [])
+        if not isinstance(amenity_ids, list):
+            raise ValueError("amenity_ids must be a list")
+
+        for amenity_id in amenity_ids:
+            amenity = self.amenity_repo.get(amenity_id)
+            if not amenity:
+                raise ValueError(f"Amenity with ID {amenity_id} not found")
+            place.amenities.append(amenity)
+
         self.place_repo.add(place)
         return place
 
@@ -103,6 +114,18 @@ class HBnBFacade:
             return None
 
         place.update(place_data)
+
+        if "amenity_ids" in place_data:
+            if not isinstance(place_data["amenity_ids"], list):
+                raise ValueError("amenity_ids must be a list")
+
+            place.amenities = []
+            for amenity_id in place_data["amenity_ids"]:
+                amenity = self.amenity_repo.get(amenity_id)
+                if not amenity:
+                    raise ValueError(f"Amenity with ID {amenity_id} not found")
+                place.amenities.append(amenity)
+
         db.session.commit() 
         return place
 

@@ -39,7 +39,7 @@ class Review(BaseModel):
             "text": self.text,
             "rating": self.rating,
             "user": self.user.to_dict() if self.user else None,
-            "place": self.place.to_dict() if self.place else None
+            "place_id": self.place_id
         }
 
     def update(self, data):

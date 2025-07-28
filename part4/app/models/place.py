@@ -1,6 +1,7 @@
 from app.models.base import BaseModel
 from app.extensions import db
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
+from app.models.associations import place_amenity
 
 
 class Place(BaseModel):
@@ -14,6 +15,12 @@ class Place(BaseModel):
 
     owner_id = db.Column(db.String(60), db.ForeignKey('users.id'), nullable=False)
     owner = db.relationship("User", backref="places")
+
+    amenities = relationship(
+        "Amenity",
+        secondary=place_amenity,
+        backref="places"
+    )
 
     def __init__(self, title, price, latitude, longitude, owner_id, description=None):
         super().__init__()
@@ -55,7 +62,10 @@ class Place(BaseModel):
             "description": self.description,
             "price": self.price,
             "latitude": self.latitude,
-            "longitude": self.longitude
+            "longitude": self.longitude,
+            "owner_id": self.owner_id,
+            "amenities": [a.to_dict() for a in self.amenities],
+            "reviews": [r.to_dict() for r in self.reviews]
         }
 
     def update(self, data):
