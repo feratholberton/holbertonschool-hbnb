@@ -40,7 +40,9 @@ def create_app(config_class=DevelopmentConfig):
     jwt.init_app(app)
     db.init_app(app)
 
-    seed_admin_user(app)
+    with app.app_context():
+        db.create_all()
+        seed_admin_user(app)
 
     # This is for not to curl everything
     # Swagger Authorizations
