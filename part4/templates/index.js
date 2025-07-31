@@ -1,8 +1,3 @@
-/* 
-  This is a SAMPLE FILE to get you started.
-  Please, follow the project instructions to complete the tasks.
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'http://127.0.0.1:5000/api/v1/places/';
     const loginLink = document.getElementById('login-link');
@@ -19,27 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
-    // --- Check authentication status ---
+    // --- Check authentication status and show/hide login ---
     function checkAuthentication() {
         const token = getCookie('HBnBToken');
-        if (!token) {
-            loginLink.style.display = 'block';
-            placesList.innerHTML = '<p>Please login to view places.</p>';
-            return null;
-        } else {
-            loginLink.style.display = 'none';
-            return token;
-        }
+        loginLink.style.display = token ? 'none' : 'block';
+        return token;
     }
 
     // --- Fetch data from API ---
     async function fetchPlaces(token) {
         try {
-            const res = await fetch(API_URL, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const res = await fetch(API_URL, { headers });
 
             if (!res.ok) throw new Error('Failed to fetch places');
             allPlaces = await res.json();
@@ -58,14 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         places.forEach(place => {
-            const card = document.createElement('div');
-            card.classList.add('place-card');
+            const card = document.createElement('article');
+            card.classList.add('place-card', 'card', 'card--place');
             card.setAttribute('data-price', place.price);
 
             card.innerHTML = `
                 <h2>${place.title}</h2>
-                <p>${place.description}</p>
-                <p><strong>$${place.price}</strong> / night</p>
+                <p>Price per night <strong>$${place.price}</strong></p>
                 <a href="place.html?id=${place.id}" class="details-button">View Details</a>
             `;
             placesList.appendChild(card);
@@ -102,8 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Run App ===
     const token = checkAuthentication();
-    if (token) {
-        setupPriceFilter();
-        fetchPlaces(token);
-    }
+    setupPriceFilter();
+    fetchPlaces(token);
 });
