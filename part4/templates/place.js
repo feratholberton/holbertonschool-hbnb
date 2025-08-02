@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
     const ratingSelect = document.getElementById('rating');
     const API_BASE = 'http://127.0.0.1:5000/api/v1';
+    const loginLink = document.getElementById('login-link');
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -111,6 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const token = getCookie('HBnBToken');
     if (token) {
         addReviewSection.style.display = 'block';
+        loginLink.style.display = token ? 'none' : 'block';
+        
 
         reviewForm.addEventListener('submit', (event) => {
             submitReview(event, placeId, token);
