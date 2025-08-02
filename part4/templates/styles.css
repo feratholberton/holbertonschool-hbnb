@@ -77,3 +77,24 @@ main {
     max-width: fit-content;
     margin: auto;
 }
+
+.place-details-amenities {
+    h2 {
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    ul, li {
+        display: inline-block;
+    }
+
+    li::after {
+        content: ',';
+        margin-right: 6px;
+    }
+    
+    li:last-child::after {
+        content: none;
+    }
+}
+

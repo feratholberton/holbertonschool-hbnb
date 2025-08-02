@@ -46,10 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong>Host:</strong> ${place.owner.first_name} ${place.owner.last_name}</p>
                     <p><strong>Price per night:</strong> $${place.price}</p>
                     <p><strong>Description:</strong> ${place.description}</p>
-                    <h2>Amenities</h2>
-                    <ul>${place.amenities.map(a => `<li>${a.name}</li>`).join('')}</ul>
+                    <div class="place-details-amenities">
+                        <h2>Amenities: </h2>
+                        <ul>${place.amenities.map(a => `<li>${a.name}</li>`).join('')}</ul>
+                    </div>
                 </div>
-                
                 <h3>Reviews</h3>
                 ${place.reviews.length > 0 ? place.reviews.map(r => `
                     <div class="card review-card">
